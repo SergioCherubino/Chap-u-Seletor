@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chapéu Seletor</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1c1c1c;
+      color: #fff;
+      text-align: center;
+      padding: 30px;
+    }
+
+    #start-screen, #quiz-container, #result {
+      display: none;
+    }
+
+    .question {
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #333;
+      color: #fff;
+      padding: 12px 24px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+
+    #start-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 70vh;
+    }
+
+    #start-button {
+      font-size: 24px;
+      padding: 20px 40px;
+    }
+
+    #result {
+      font-size: 24px;
+      margin-top: 30px;
+    }
+
+    .resultado-conteudo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .emblema {
+      max-width: 300px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Chapéu Seletor de Hogwarts</h1>
+
+  <div id="start-screen">
+    <button id="start-button">Começar</button>
+  </div>
+
+  <div id="quiz-container"></div>
+  <div id="result"></div>
+
+  <!-- 🎧 Player de áudio escondido -->
+  <audio id="audioPlayer" style="display: none;"></audio>
+
+  <script>
+    const perguntas = [
+      {
+        texto: "O que você mais valoriza?",
+        opcoes: {
+          "Grifinória": "Coragem",
+          "Sonserina": "Ambição",
+          "Lufa-Lufa": "Lealdade",
+          "Corvinal": "Inteligência"
+        }
+      },
+      {
+        texto: "Qual animal você prefere?",
+        opcoes: {
+          "Grifinória": "Leão",
+          "Sonserina": "Cobra",
+          "Lufa-Lufa": "Texugo",
+          "Corvinal": "Águia"
+        }
+      },
+      {
+        texto: "O que você faria em uma situação difícil?",
+        opcoes: {
+          "Grifinória": "Enfrentaria de frente",
+          "Sonserina": "Procuraria uma vantagem",
+          "Lufa-Lufa": "Ajudaria os outros",
+          "Corvinal": "Analisaria calmamente"
+        }
+      },
+      {
+        texto: "Qual dessas qualidades você mais admira?",
+        opcoes: {
+          "Grifinória": "Determinação",
+          "Sonserina": "Astúcia",
+          "Lufa-Lufa": "Paciência",
+          "Corvinal": "Criatividade"
+        }
+      },
+      {
+        texto: "Como você prefere passar seu tempo livre?",
+        opcoes: {
+          "Grifinória": "Praticando esportes ou aventuras",
+          "Sonserina": "Planejando seus objetivos",
+          "Lufa-Lufa": "Ajudando os amigos",
+          "Corvinal": "Lendo ou estudando"
+        }
+      },
+      {
+        texto: "Em um trabalho em grupo, você costuma:",
+        opcoes: {
+          "Grifinória": "Tomar a liderança",
+          "Sonserina": "Buscar uma estratégia eficaz",
+          "Lufa-Lufa": "Garantir que todos sejam ouvidos",
+          "Corvinal": "Resolver os problemas complexos"
+        }
+      },
+      {
+        texto: "Qual dessas matérias você mais gostaria de estudar em Hogwarts?",
+        opcoes: {
+          "Grifinória": "Defesa Contra as Artes das Trevas",
+          "Sonserina": "Poções",
+          "Lufa-Lufa": "Herbologia",
+          "Corvinal": "Feitiços"
+        }
+      }
+    ];
+
+    let indicePergunta = 0;
+    let pontuacoes = {
+      "Grifinória": 0,
+      "Sonserina": 0,
+      "Lufa-Lufa": 0,
+      "Corvinal": 0
+    };
+
+    function tocarAudioPergunta(numero) {
+      const audio = document.getElementById("audioPlayer");
+      audio.src = `audios/pergunta${numero + 1}.mp3`;
+      audio.onerror = () => {
+        console.warn("Áudio não encontrado. Exibindo texto normalmente.");
+      };
+      audio.play();
+    }
+
+    function mostrarPergunta() {
+      const container = document.getElementById("quiz-container");
+      container.innerHTML = "";
+
+      if (indicePergunta < perguntas.length) {
+        const pergunta = perguntas[indicePergunta];
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `<h2>${pergunta.texto}</h2>`;
+
+        tocarAudioPergunta(indicePergunta);
+
+        for (const casa in pergunta.opcoes) {
+          const btn = document.createElement("button");
+          btn.textContent = pergunta.opcoes[casa];
+          btn.onclick = () => {
+            pontuacoes[casa]++;
+            indicePergunta++;
+            mostrarPergunta();
+          };
+          div.appendChild(btn);
+        }
+
+        container.appendChild(div);
+      } else {
+        mostrarResultado();
+      }
+    }
+
+function mostrarResultado() {
+  const container = document.getElementById("quiz-container");
+  const resultado = document.getElementById("result");
+  container.innerHTML = "";
+  resultado.style.display = "block";
+
+  // Encontrar a casa com a maior pontuação
+  const casaSelecionada = Object.keys(pontuacoes).reduce((a, b) =>
+    pontuacoes[a] > pontuacoes[b] ? a : b
+  );
+
+  // Criar slug para o nome da casa
+  const casaSlug = casaSelecionada.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, "-");
+
+  // Exibir o resultado
+  resultado.innerHTML = `
+    <div class="resultado-conteudo">
+      <p>Você foi selecionado para a <strong>${casaSelecionada}</strong>!</p>
+      <img src="emblemas/${casaSlug}.png" alt="${casaSelecionada}" class="emblema" />
+      <button id="restart-button">Recomeçar</button>
+    </div>
+  `;
+
+  // Tocar o áudio do resultado
+  const audio = document.getElementById("audioPlayer");
+  audio.src = `audios/resultado_${casaSlug}.mp3`;
+  audio.play();
+
+  // Tocar o áudio de mensagem final (resultado)
+  const resultadoAudio = new Audio(`audios/resultado_final.mp3`);
+  resultadoAudio.play();
+
+  // Ao clicar para recomeçar
+  document.getElementById("restart-button").onclick = () => {
+    indicePergunta = 0;
+    pontuacoes = {
+      "Grifinória": 0,
+      "Sonserina": 0,
+      "Lufa-Lufa": 0,
+      "Corvinal": 0
+    };
+    resultado.innerHTML = "";
+    resultado.style.display = "none";
+    document.getElementById("start-screen").style.display = "flex";
+    document.getElementById("quiz-container").style.display = "none";
+  };
+}
+
+
+    document.getElementById("start-button").onclick = () => {
+      document.getElementById("start-screen").style.display = "none";
+      document.getElementById("quiz-container").style.display = "block";
+      mostrarPergunta();
+    };
+  </script>
+</body>
+</html>
