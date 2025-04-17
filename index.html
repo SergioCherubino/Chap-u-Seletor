@@ -181,7 +181,43 @@
           const btn = document.createElement("button");
           btn.textContent = pergunta.opcoes[casa];
           btn.onclick = () => {
-            pontuacoes[casa]++;
+            
+const respostaSelecionada = pergunta.opcoes[casa];
+const pesos = {
+  "Coragem": { "Grifinória": 1, "Lufa-Lufa": 0.5, "Sonserina": 0.25, "Corvinal": 0 },
+  "Ambição": { "Sonserina": 1, "Corvinal": 0.5, "Grifinória": 0.25, "Lufa-Lufa": 0 },
+  "Lealdade": { "Lufa-Lufa": 1, "Grifinória": 0.5, "Corvinal": 0.25, "Sonserina": 0 },
+  "Inteligência": { "Corvinal": 1, "Sonserina": 0.5, "Lufa-Lufa": 0.25, "Grifinória": 0 },
+  "Leão": { "Grifinória": 1, "Lufa-Lufa": 0.5, "Sonserina": 0.25, "Corvinal": 0 },
+  "Cobra": { "Sonserina": 1, "Corvinal": 0.5, "Grifinória": 0.25, "Lufa-Lufa": 0 },
+  "Texugo": { "Lufa-Lufa": 1, "Grifinória": 0.5, "Corvinal": 0.25, "Sonserina": 0 },
+  "Águia": { "Corvinal": 1, "Sonserina": 0.5, "Lufa-Lufa": 0.25, "Grifinória": 0 },
+  "Enfrentaria de frente": { "Grifinória": 1, "Lufa-Lufa": 0.5, "Sonserina": 0.25, "Corvinal": 0 },
+  "Procuraria uma vantagem": { "Sonserina": 1, "Corvinal": 0.5, "Grifinória": 0.25, "Lufa-Lufa": 0 },
+  "Ajudaria os outros": { "Lufa-Lufa": 1, "Grifinória": 0.5, "Corvinal": 0.25, "Sonserina": 0 },
+  "Analisaria calmamente": { "Corvinal": 1, "Sonserina": 0.5, "Lufa-Lufa": 0.25, "Grifinória": 0 },
+  "Determinação": { "Grifinória": 1, "Lufa-Lufa": 0.5, "Sonserina": 0.25, "Corvinal": 0 },
+  "Astúcia": { "Sonserina": 1, "Corvinal": 0.5, "Grifinória": 0.25, "Lufa-Lufa": 0 },
+  "Paciência": { "Lufa-Lufa": 1, "Grifinória": 0.5, "Corvinal": 0.25, "Sonserina": 0 },
+  "Criatividade": { "Corvinal": 1, "Sonserina": 0.5, "Lufa-Lufa": 0.25, "Grifinória": 0 },
+  "Praticando esportes ou aventuras": { "Grifinória": 1, "Lufa-Lufa": 0.5, "Sonserina": 0.25, "Corvinal": 0 },
+  "Planejando seus objetivos": { "Sonserina": 1, "Corvinal": 0.5, "Grifinória": 0.25, "Lufa-Lufa": 0 },
+  "Ajudando os amigos": { "Lufa-Lufa": 1, "Grifinória": 0.5, "Corvinal": 0.25, "Sonserina": 0 },
+  "Lendo ou estudando": { "Corvinal": 1, "Sonserina": 0.5, "Lufa-Lufa": 0.25, "Grifinória": 0 },
+  "Tomar a liderança": { "Grifinória": 1, "Sonserina": 0.5, "Lufa-Lufa": 0.25, "Corvinal": 0 },
+  "Buscar uma estratégia eficaz": { "Sonserina": 1, "Corvinal": 0.5, "Grifinória": 0.25, "Lufa-Lufa": 0 },
+  "Garantir que todos sejam ouvidos": { "Lufa-Lufa": 1, "Grifinória": 0.5, "Corvinal": 0.25, "Sonserina": 0 },
+  "Resolver os problemas complexos": { "Corvinal": 1, "Sonserina": 0.5, "Lufa-Lufa": 0.25, "Grifinória": 0 },
+  "Defesa Contra as Artes das Trevas": { "Grifinória": 1, "Lufa-Lufa": 0.5, "Sonserina": 0.25, "Corvinal": 0 },
+  "Poções": { "Sonserina": 1, "Corvinal": 0.5, "Grifinória": 0.25, "Lufa-Lufa": 0 },
+  "Herbologia": { "Lufa-Lufa": 1, "Grifinória": 0.5, "Corvinal": 0.25, "Sonserina": 0 },
+  "Feitiços": { "Corvinal": 1, "Sonserina": 0.5, "Lufa-Lufa": 0.25, "Grifinória": 0 }
+};
+const distribuicao = pesos[respostaSelecionada];
+for (const destino in distribuicao) {
+  pontuacoes[destino] += distribuicao[destino];
+}
+
             indicePergunta++;
             mostrarPergunta();
           };
